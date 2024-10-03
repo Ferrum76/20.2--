@@ -1,30 +1,33 @@
 {% extends 'catalog/base.html' %}
 {% load my_tags %}
-{% block content%}
-<div class="album py-5 bg-body-tertiary">
-    <div class="container">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-        <div class="col">
-          <div class="card shadow-sm">
-            <img class="p-3 bd-placeholder-img card-img-top" src="{{ product.image | media_filter }}" width='300' height='300'>
+{% block content %}
+<div class="row text-center">
+    <div class="col-3">
+        <div class="card mb-4 box-shadow">
+            <img src="{{ product.image | media_filter }}">
             <div class="card-body">
-              <p class="card-text">Наименование продукта: {{ object.name }}.</p>
-              {% if product.description == '' %}
-              <p class="card-text">Описание отсутствует.</p>
-              {% else %}
-              <p class="card-text">Описание: {{ object.description }}.</p>
-              {% endif %}
-              <p class="card-text">Цена: {{ object.price }}р.</p>
-              <div class="d-flex justify-content-between align-items-center">
+                <h1 class="card-title pricing-card-title">{{ product.name }}</h1>
+                <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                    <li>Описание: {{ product.description }}</li>
+                    <li>Категория: {{ product.category }}</li>
+                    <li>Цена: {{ product.price_pay }}</li>
+                    <li>Дата изменения: {{ product.manufactured_at }}</li>
+                </ul>
                 <div class="btn-group">
-                    <a class="btn btn-primary" href="{% url 'catalog:product_list' %}" role="button">Назад</a>
+                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">Купить</button>
                 </div>
-                <small class="text-body-secondary">{{ object.category }}</small>
-              </div>
+                <div class="btn-group">
+                    <a href="{% url 'catalog:product_delete' object.pk %}" type="button"
+                           class="btn btn-lg btn-danger" style="float:right">Удалить
+                    </a>
+                   </div>
+                <div class="btn-group">
+                    <a href="{% url 'catalog:product_update' object.pk %}" type="button"
+                           class="btn btn-lg m-3  btn-outline-primary" style="float:right">Редактировать
+                    </a>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
+</div>
 {% endblock %}

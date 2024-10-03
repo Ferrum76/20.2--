@@ -6,39 +6,52 @@ import os
 class Command(BaseCommand):
     help = 'Загружает данные из фикстур и очищает старые данные'
 
+    @staticmethod
+    def json_read_categories():
+        """получаем данные из фикстуры с категориями"""
+        with open("catalog/fixtures/categories.json", "r", encoding="utf-8") as f:
+            categories = json.load(f)
+            return categories
+
+    @staticmethod
+    def json_read_products():
+        """ "получаем данные из фикстуры с продуктами"""
+        with open("catalog/fixtures/products.json", "r", encoding="utf-8") as f:
+            products = json.load(f)
+            return products
+
     def handle(self, *args, **options):
-        fixture_path = os.path.join('catalog', 'fixtures', 'catalog_data.json')
-
-        if not os.path.exists(fixture_path):
-            self.stdout.write(self.style.ERROR(f'Файл фикстуры {fixture_path} не найден.'))
-            return
-
-        with open(fixture_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-
-        # Очистка существующих данных
         Product.objects.all().delete()
         Category.objects.all().delete()
 
-        # Загрузка новых данных
-        for entry in data:
-            model = entry['model']
-            pk = entry['pk']
-            fields = entry['fields']
+        Category.truncate_table_restart_id()
 
-            if model == 'catalog.category':
-                Category.objects.create(id=pk, **fields)
-            elif model == 'catalog.product':
-                category = Category.objects.get(pk=fields['category'])
-                Product.objects.create(
-                    id=pk,
-                    name=fields['name'],
-                    description=fields.get('description', ''),
-                    image=fields.get('image', ''),
-                    category=category,
-                    price=fields['price'],
-                    created_at=fields.get('created_at', None),
-                    updated_at=fields.get('updated_at', None)
+        category_for_create = []
+        product_for_create = []
+
+        for category in Command.json_read_categories():
+            category_for_create.append(
+                Category(
+                    pk=category["pk"],
+                    name=category["fields"]["name"],
+                    description=category["fields"]["description"],
                 )
+            )
 
-        self.stdout.write(self.style.SUCCESS('Данные успешно загружены из фикстур.'))
+        for product in Command.json_read_products():
+            print(product)
+            product_for_create.append(
+                Product(
+                    pk=product["pk"],
+                    name=product["fields"]["name"],
+                    description=product["fields"]["description"],
+                    image=product["fields"]["image"],
+                    category=Category(pk=category["pk"]),
+                    price=product["fields"]["price"],
+                    created_at=product["fields"]["created_at"],
+                    updated_at=product["fields"]["updated_at"],
+                )
+            )
+
+        Category.objects.bulk_create(category_for_create)
+        Product.objects.bulk_create(product_for_create)
