@@ -6,8 +6,7 @@
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         <div class="col">
           <div class="card shadow-sm">
-            {{
-            <img src="{{ product.image | media_filter }}" width='300' height='300'>
+            <img class="p-3 bd-placeholder-img card-img-top" src="{{ product.image | media_filter }}" width='300' height='300'>
             <div class="card-body">
               <p class="card-text">Наименование продукта: {{ product.name }}.</p>
               <p class="card-text">Описание: {{ product.description }}.</p>
@@ -16,7 +15,7 @@
                 <div class="btn-group">
                   <a class="btn btn-primary" href="{% url 'catalog:products_list' %}" role="button">Назад</a>
                 </div>
-                <small class="text-body-secondary">9 mins</small>
+                <small class="text-body-secondary">{{ product.category }}</small>
               </div>
             </div>
           </div>
