@@ -1,30 +1,29 @@
-{% extends 'base.html' %}
+{% extends 'catalog/base.html' %}
 {% load my_tags %}
 {% block content%}
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-        {% for product in product_list %}
         <div class="col">
           <div class="card shadow-sm">
             <img class="p-3 bd-placeholder-img card-img-top" src="{{ product.image | media_filter }}" width='300' height='300'>
             <div class="card-body">
-              <p class="card-text">{{ product.name }}.</p>
+              <p class="card-text">Наименование продукта: {{ object.name }}.</p>
               {% if product.description == '' %}
               <p class="card-text">Описание отсутствует.</p>
               {% else %}
-              <p class="card-text">{{ product.description|truncatechars:20 }}.</p>
+              <p class="card-text">Описание: {{ object.description }}.</p>
               {% endif %}
+              <p class="card-text">Цена: {{ object.price }}р.</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <a class="btn btn-warning" href="{% url 'catalog:product_detail' product.pk %}" role="button">Подробнее</a>
+                    <a class="btn btn-primary" href="{% url 'catalog:product_list' %}" role="button">Назад</a>
                 </div>
-                <small class="text-body-secondary">{{ product.category }}</small>
+                <small class="text-body-secondary">{{ object.category }}</small>
               </div>
             </div>
           </div>
         </div>
-        {% endfor %}
       </div>
     </div>
   </div>
