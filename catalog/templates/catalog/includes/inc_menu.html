@@ -9,8 +9,18 @@
             <div class="col-sm-4 offset-md-1 py-4">
                 <ul class="list-unstyled">
                     <li><a href="{% url 'catalog:product_list' %}" class="text-white">Главная</a></li>
-                    <li><a class="p-2 btn btn-outline-primary" href="{% url 'catalog:contact' %}">Контакты</a></li>
                     <li><a href="{% url 'blog:list' %}" class="text-white">Наш блог</a></li>
+                    <li><a href="{% url 'catalog:category_list' %}" class="text-white">Категории</a></li>
+                    <li><a class="text-white" href="{% url 'catalog:contact' %}">Контакты</a></li>
+                    {% if user.is_authenticated %}
+                    <form action="{% url 'users:logout' %}" method="post" class="text-white" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit">Выход</button>
+                    </form>
+                    {% else %}
+                    <li><a href="{% url 'users:login' %}" class="text-white">Вход</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'users:registration' %}" class="text-white">Регистрация</a></li>
                 </ul>
             </div>
         </div>

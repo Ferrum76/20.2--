@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from django.forms import ModelForm, BooleanField
+from django.forms import ModelForm, BooleanField, forms
 
 from catalog.models import Product, Version
 
@@ -30,9 +30,19 @@ class ProductForm(StyleFormMixin, ModelForm):
         clean_name = self.cleaned_data.get('name')
         for word in self.bad_words:
             if word in clean_name:
-                raise ValidationError(f'{word}- такое слово недопустимо')
+                raise forms.ValidationError(
+                    "В названии продукта не должно быть запрещенных слов"
+                )
         return clean_name
 
+    def clean_description(self):
+        cleaned_data = self.cleaned_data["description"]
+        for word in self.bad_words:
+            if word in cleaned_data:
+                raise forms.ValidationError(
+                    "В описании продукта не должно быть запрещенных слов"
+                )
+        return cleaned_data
 
 class VersionForm(StyleFormMixin, ModelForm):
     class Meta:
