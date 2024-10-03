@@ -8,7 +8,7 @@ class Command(BaseCommand):
     @staticmethod
     def json_read_blogs():
         """ "получаем данные из фикстуры с продуктами"""
-        with open("=blog/fixtures/blog.json", "r", encoding="utf-8") as f:
+        with open("blog/fixtures/blogs.json", "r", encoding="utf-8") as f:
             products = json.load(f)
             return products
 
