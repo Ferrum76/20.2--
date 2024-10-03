@@ -10,6 +10,11 @@
             <img class="p-3 bd-placeholder-img card-img-top" src="{{ product.image | media_filter }}" width='300' height='300'>
             <div class="card-body">
               <p class="card-text">{{ product.name }}.</p>
+              {% if product.description == '' %}
+              <p class="card-text">Описание отсутствует.</p>
+              {% else %}
+              <p class="card-text">{{ product.description|truncatechars:20 }}.</p>
+              {% endif %}
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                   <a class="btn btn-warning" href="{% url 'catalog:product_detail' product.pk %}" role="button">Подробнее</a>
