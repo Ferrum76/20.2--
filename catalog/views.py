@@ -7,6 +7,7 @@ from django.views.generic import ListView, DetailView, DeleteView, CreateView, U
 
 from catalog.forms import ProductForm, VersionForm, ProductModeratorForm
 from catalog.models import Product, Version, Category
+from catalog.services import get_categories_from_cache
 
 
 class ProductListView(ListView):
@@ -36,20 +37,16 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
     login_url = '/users/login/'
 
 
-def contacts(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        phone = request.POST.get('phone')
-        message = request.POST.get('message')
-        print(f"Имя пользователя : {name}\nТелефон: {phone}\nСообщение: {message}")
-
-    return render(request, 'catalog/contacts.html')
-
-
 class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     success_url = reverse_lazy('catalog:products_list')
     login_url = '/users/login/'
+
+    def get_form_class(self):
+        user = self.request.user
+        if user == self.object.owner:
+            return ProductForm
+        raise PermissionDenied
 
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
@@ -109,3 +106,18 @@ class BasePageView(TemplateView):
 class CategoryListView(ListView):
     model = Category
     success_url = reverse_lazy("catalog:category_list.html")
+
+    def get_queryset(self):
+        return get_categories_from_cache()
+
+
+
+def contacts(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        phone = request.POST.get('phone')
+        message = request.POST.get('message')
+        print(f"Имя пользователя : {name}\nТелефон: {phone}\nСообщение: {message}")
+
+    return render(request, 'catalog/contacts.html')
+
