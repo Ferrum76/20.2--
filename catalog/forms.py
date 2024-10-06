@@ -48,3 +48,9 @@ class VersionForm(StyleFormMixin, ModelForm):
     class Meta:
         model = Version
         fields = ('product', 'version_name', 'version_number')  # перечисляем поля для отображения
+
+
+class ProductModeratorForm(StyleFormMixin, ModelForm):
+    class Meta:
+        model = Product
+        fields = ('description', 'category', 'is_published')

@@ -18,6 +18,9 @@ dump-product:
 dump-blog:
 	 python3 -Xutf8 manage.py dumpdata blog.blog > blog/fixtures/blogs.json
 
+dump-groups:
+	 python3 -Xutf8 manage.py dumpdata auth.group > ./groups.json
+
 populate: populate_catalog populate_blog csu
 
 csu:
