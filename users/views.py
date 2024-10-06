@@ -1,4 +1,3 @@
-import os
 import secrets
 
 from django.contrib.auth.forms import PasswordResetForm
@@ -6,12 +5,10 @@ from django.contrib.auth.views import PasswordResetView, LoginView, LogoutView
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import never_cache
-from django.views.decorators.csrf import csrf_protect
 from django.views.generic import CreateView, TemplateView
 
 from catalog.forms import StyleFormMixin
+from config.settings import EMAIL_HOST_USER
 from users.forms import UserRegisterForm
 from users.models import User
 
@@ -63,7 +60,7 @@ class UserPasswordResetView(PasswordResetView, StyleFormMixin):
                 send_mail(
                     subject="Новый пароль",
                     message=f"Привет, вот твой новый пароль {password}",
-                    from_email=os.getenv("EMAIL_HOST_USER"),
+                    from_email=EMAIL_HOST_USER,
                     recipient_list=[email],
                 )
             return redirect(reverse("users:login"))
