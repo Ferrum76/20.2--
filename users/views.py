@@ -27,13 +27,12 @@ class UserCreateView(CreateView, StyleFormMixin):
         host = self.request.get_host()
         url = f"http://{host}/users/email-confirm/{token}"
         print(url)
-        # TODO: добавить отправку письма
-        # send_mail(
-        #     subject="Подтверждение почты",
-        #     message=f"Привет, для подтверждения почты необходимо перейти по этой ссылке {url}",
-        #     from_email=os.getenv("EMAIL_HOST_USER"),
-        #     recipient_list=[user.email],
-        # )
+        send_mail(
+            subject="Подтверждение почты",
+            message=f"Привет, для подтверждения почты необходимо перейти по этой ссылке {url}",
+            from_email=EMAIL_HOST_USER,
+            recipient_list=[user.email],
+        )
         return super().form_valid(form)
 
 
